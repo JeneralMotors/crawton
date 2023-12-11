@@ -16,7 +16,7 @@ This Python script is a web scraper designed for ethical hacking purposes. It al
 ### Prerequisites
 
 - Python 3.x
-- Required Python packages: `requests`, `beautifulsoup4`
+- Required Python packages: `beautifulsoup4`
 
 Install the required packages using:
 
