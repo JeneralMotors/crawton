@@ -6,6 +6,12 @@ import time
 import random
 
 def get_links(url_target_domain):
+    """
+    Retrieve links from a given URL within the specified target domain.
+
+    :param url_target_domain: Tuple containing the URL and the target domain.
+    :return: List of tuples containing the absolute URLs and target domains of the links.
+    """
     url, target_domain = url_target_domain
     try:
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'}
@@ -13,6 +19,7 @@ def get_links(url_target_domain):
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         parsed_target = urlparse(target_domain)
+        # Extract absolute URLs with the same target domain
         return [(urljoin(url, a['href']), target_domain) for a in soup.find_all('a', href=True)
                 if urlparse(urljoin(url, a['href'])).netloc == parsed_target.netloc]
     except requests.exceptions.RequestException as e:
@@ -23,6 +30,11 @@ def get_links(url_target_domain):
         return []
 
 def scrape_recursive(args):
+    """
+    Recursively scrape links up to a specified depth.
+
+    :param args: Tuple containing the URL, depth, and target domain.
+    """
     url, depth, target_domain = args
     visited_links = set()
 
@@ -36,7 +48,7 @@ def scrape_recursive(args):
         links = get_links((url, target_domain))
         for link, _ in links:
             scrape(link, current_depth + 1)
-            # Agregar tiempo de espera aleatorio entre 0.50 y 0.97 segundos
+            # Add a random wait time between 0.50 and 0.97 seconds
             time.sleep(random.uniform(0.50, 0.97))
 
     scrape(url, 1)
